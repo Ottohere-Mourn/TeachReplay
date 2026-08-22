@@ -1,0 +1,142 @@
+[
+  {
+    "task": "t1-baseline",
+    "replay": "defaults run 1",
+    "expected": "success",
+    "actual": "success",
+    "groundTruthOk": true,
+    "steps": "7/7",
+    "durationMs": 37287,
+    "ok": true
+  },
+  {
+    "task": "t1-baseline",
+    "replay": "defaults run 2",
+    "expected": "success",
+    "actual": "success",
+    "groundTruthOk": true,
+    "steps": "7/7",
+    "durationMs": 37338,
+    "ok": true
+  },
+  {
+    "task": "t1-baseline",
+    "replay": "defaults run 3",
+    "expected": "success",
+    "actual": "success",
+    "groundTruthOk": true,
+    "steps": "7/7",
+    "durationMs": 38249,
+    "ok": true
+  },
+  {
+    "task": "t2-param-swap",
+    "replay": "October",
+    "expected": "success",
+    "actual": "success",
+    "groundTruthOk": true,
+    "steps": "7/7",
+    "durationMs": 38575,
+    "ok": true
+  },
+  {
+    "task": "t2-param-swap",
+    "replay": "December",
+    "expected": "success",
+    "actual": "success",
+    "groundTruthOk": true,
+    "steps": "7/7",
+    "durationMs": 36978,
+    "ok": true
+  },
+  {
+    "task": "t2-param-swap",
+    "replay": "March",
+    "expected": "success",
+    "actual": "success",
+    "groundTruthOk": true,
+    "steps": "7/7",
+    "durationMs": 37367,
+    "ok": true
+  },
+  {
+    "task": "t3-mild-drift",
+    "replay": "Month (required)",
+    "expected": "success",
+    "actual": "success",
+    "groundTruthOk": true,
+    "steps": "7/7",
+    "durationMs": 37595,
+    "ok": true
+  },
+  {
+    "task": "t4-severe-drift",
+    "replay": "Reporting period",
+    "expected": "failed",
+    "actual": "failed",
+    "groundTruthOk": true,
+    "steps": "1/7",
+    "durationMs": 7138,
+    "ok": true
+  },
+  {
+    "task": "t5-missing-element",
+    "replay": "notes field removed",
+    "expected": "failed",
+    "actual": "failed",
+    "groundTruthOk": true,
+    "steps": "4/7",
+    "durationMs": 25115,
+    "ok": true
+  },
+  {
+    "task": "t6-gui-cli",
+    "replay": "gui+cli October",
+    "expected": "success",
+    "actual": "success",
+    "groundTruthOk": true,
+    "steps": "8/8",
+    "durationMs": 37266,
+    "ok": true
+  },
+  {
+    "task": "t7-partial-inputs",
+    "replay": "only month given",
+    "expected": "success",
+    "actual": "success",
+    "groundTruthOk": true,
+    "steps": "7/7",
+    "durationMs": 38174,
+    "ok": true
+  },
+  {
+    "task": "t8-repeat",
+    "replay": "May",
+    "expected": "success",
+    "actual": "success",
+    "groundTruthOk": true,
+    "steps": "7/7",
+    "durationMs": 39249,
+    "ok": true
+  },
+  {
+    "task": "t8-repeat",
+    "replay": "July",
+    "expected": "success",
+    "actual": "success",
+    "groundTruthOk": true,
+    "steps": "7/7",
+    "durationMs": 39309,
+    "ok": true
+  },
+  {
+    "task": "t8-repeat",
+    "replay": "April",
+    "expected": "success",
+    "actual": "success",
+    "groundTruthOk": true,
+    "steps": "7/7",
+    "durationMs": 37556,
+    "ok": true
+  }
+]
