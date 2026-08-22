@@ -5,10 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>TeachReplay — Teach once, replay anywhere.</title>
   <meta name="description" content="TeachReplay is a harness-agnostic Teach-by-Demonstration engine: show a workflow once, replay it later with different inputs and an explicit verdict.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="TeachReplay — Teach once, replay anywhere.">
+  <meta property="og:description" content="A harness-agnostic Teach-by-Demonstration engine: show a workflow once, replay it later with different inputs and an explicit verdict.">
+  <meta property="og:image" content="https://ottohere-mourn.github.io/TeachReplay/assets/teachreplay-hero.png">
+  <meta property="og:url" content="https://ottohere-mourn.github.io/TeachReplay/">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='2' fill='%23c87941'/%3E%3Cpath d='M4 5h8v2H4zm0 4h8v2H4z' fill='%23fff7ec'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+  <nav class="sitenav">
+    <div class="sitenav-inner">
+      <a href="#demo">Demo</a>
+      <a href="#how">How it works</a>
+      <a href="#highlights">Highlights</a>
+      <a href="#packages">Packages</a>
+      <a href="#integrations">Integrations</a>
+      <a href="#quickstart">Quick start</a>
+      <a href="#limitations">Limitations</a>
+      <a class="sitenav-gh" href="https://github.com/Ottohere-Mourn/TeachReplay">GitHub</a>
+    </div>
+  </nav>
+
   <main class="wrap">
 
     <!-- hero -->
@@ -29,7 +49,7 @@
     </header>
 
     <!-- demo -->
-    <section class="card demo">
+    <section class="card demo" id="demo">
       <a href="assets/teachreplay-demo.mp4" title="Watch in HD">
         <img class="demo-gif" src="assets/teachreplay-demo.gif" alt="TeachReplay demo — teach, compile, change parameters, replay, success">
       </a>
@@ -37,7 +57,7 @@
     </section>
 
     <!-- workflow -->
-    <section>
+    <section id="how">
       <h2>How it works</h2>
       <ol class="flow">
         <li><b>Teach</b><span>start recording, demonstrate the task once</span></li>
@@ -53,20 +73,32 @@
     </section>
 
     <!-- highlights -->
-    <section>
+    <section id="highlights">
       <h2>Highlights</h2>
       <div class="grid">
-        <div class="tile"><h3>Harness-agnostic</h3><p>Zero OpenMausBot dependencies, enforced by a test. Adapters contribute backends and stores only.</p></div>
-        <div class="tile"><h3>GUI + CLI workflows</h3><p>Shell commands recorded with real exit codes replay beside browser steps.</p></div>
-        <div class="tile"><h3>Parameterized skills</h3><p>Demonstrated values become inputs — your values are the defaults.</p></div>
-        <div class="tile"><h3>Explicit verification</h3><p>Success requires the recorded condition to hold; failures say which step broke.</p></div>
-        <div class="tile"><h3>Real remote computers</h3><p>Validated on live Linux boxes over SSH — GUI and shell in one workflow.</p></div>
-        <div class="tile"><h3>Semantic grounding</h3><p>Roles and names, not pixels — mild UI drift tolerated, severe drift fails loudly.</p></div>
+        <div class="tile"><span class="tile-icon" aria-hidden="true">◆</span><h3>Harness-agnostic</h3><p>Zero OpenMausBot dependencies, enforced by a test. Adapters contribute backends and stores only.</p></div>
+        <div class="tile"><span class="tile-icon" aria-hidden="true">▣</span><h3>GUI + CLI workflows</h3><p>Shell commands recorded with real exit codes replay beside browser steps.</p></div>
+        <div class="tile"><span class="tile-icon" aria-hidden="true">⚙</span><h3>Parameterized skills</h3><p>Demonstrated values become inputs — your values are the defaults.</p></div>
+        <div class="tile"><span class="tile-icon" aria-hidden="true">✓</span><h3>Explicit verification</h3><p>Success requires the recorded condition to hold; failures say which step broke.</p></div>
+        <div class="tile"><span class="tile-icon" aria-hidden="true">▤</span><h3>Real remote computers</h3><p>Validated on live Linux boxes over SSH — GUI and shell in one workflow.</p></div>
+        <div class="tile"><span class="tile-icon" aria-hidden="true">◎</span><h3>Semantic grounding</h3><p>Roles and names, not pixels — mild UI drift tolerated, severe drift fails loudly.</p></div>
+      </div>
+    </section>
+
+    <!-- package overview -->
+    <section id="packages">
+      <h2>Package overview</h2>
+      <p class="section-intro">The core depends on nothing but Node.js — enforced by an automated independence test. Adapters contribute backends, stores, and event sinks only.</p>
+      <div class="rows">
+        <div class="row"><span class="pkg-mark">◆</span><b><a href="https://github.com/Ottohere-Mourn/TeachReplay/tree/main/packages/core">@teachreplay/core</a></b><span class="row-note">trajectory schema · recorder · parameterized skill compiler · parameter substitution · replay engine · verifier · file stores · createTeachRuntime</span></div>
+        <div class="row"><span class="pkg-mark">◆</span><b><a href="https://github.com/Ottohere-Mourn/TeachReplay/tree/main/packages/remote">@teachreplay/remote</a></b><span class="row-note">generic SSH Linux computer backend (Xvfb + Chrome DevTools) with GUI + shell channels</span></div>
+        <div class="row"><span class="pkg-mark">◆</span><b><a href="https://github.com/Ottohere-Mourn/TeachReplay/tree/main/packages/mock">@teachreplay/mock</a></b><span class="row-note">deterministic in-memory demo computer for tests and local demos</span></div>
+        <div class="row"><span class="pkg-mark">◆</span><b><a href="https://github.com/Ottohere-Mourn/TeachReplay/tree/main/packages/adapter-dsh">@teachreplay/adapter-dsh</a></b><span class="row-note">DeepSeek Harness plugin registering teach_* tools</span></div>
       </div>
     </section>
 
     <!-- integrations -->
-    <section>
+    <section id="integrations">
       <h2>Integrations</h2>
       <div class="rows">
         <div class="row"><span class="dot ok"></span><b>Standalone</b><span class="row-note">createTeachRuntime + demo computer — no harness needed</span></div>
@@ -75,17 +107,38 @@
       </div>
     </section>
 
-    <!-- evaluation -->
-    <section>
-      <h2>Small validation benchmark</h2>
-      <div class="stats">
-        <div class="stat"><b>14/14</b><span>verdicts correct</span></div>
-        <div class="stat"><b>12/12</b><span>normal replays</span></div>
-        <div class="stat"><b>6/6</b><span>changed parameters</span></div>
-        <div class="stat"><b>2/2</b><span>drift detected</span></div>
+    <!-- quick start -->
+    <section id="quickstart">
+      <h2>Quick start</h2>
+      <div class="terminal">
+        <div class="terminal-bar">
+          <span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span>
+          <span class="terminal-title">~/TeachReplay</span>
+        </div>
+        <pre class="terminal-body"><code><span class="cmt"># clone and install</span>
+git clone https://github.com/Ottohere-Mourn/TeachReplay.git
+cd TeachReplay
+pnpm install
+
+<span class="cmt"># build, then try it</span>
+pnpm build
+pnpm demo        <span class="cmt"># record → compile → change parameters → replay → verify</span>
+pnpm test        <span class="cmt"># 50 tests, including the zero-harness-dependency invariant</span>
+pnpm typecheck</code></pre>
       </div>
-      <p class="note">8 tasks / 14 replays on a real remote Linux computer, ground-truth checked.
-        An honest sanity check — <b>not</b> a state-of-the-art claim.</p>
+      <p class="demo-caption">Runs entirely on the built-in demo computer — no credentials, no network, no harness.</p>
+    </section>
+
+    <!-- limitations -->
+    <section id="limitations">
+      <h2>Known limitations</h2>
+      <ul class="limits">
+        <li>Recording observes state transitions (polled, ~500 ms), not input events — very fast actions can coalesce.</li>
+        <li>Clicks are inferred from state changes; ambiguous transitions record no click rather than a wrong one.</li>
+        <li>Model-assisted recovery is an optional hook — adapters wire the agent.</li>
+        <li>Replay speed is SSH-round-trip bound (~4 s/step on the evaluation box).</li>
+        <li>DSH is in developer preview with compatibility-breaking changes — re-verify per release.</li>
+      </ul>
     </section>
 
     <!-- footer -->
