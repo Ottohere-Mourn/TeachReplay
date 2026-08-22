@@ -1,0 +1,22 @@
+TeachReplay Core
+Copyright 2026 TeachReplay contributors
+
+This product includes software derived from OpenMausBot
+(https://github.com/milind-soni/OpenMausBot), Apache License 2.0,
+Copyright 2026 Milind Soni and OpenMausBot contributors:
+
+- packages/core/src/{trajectory,recorder,compiler,replay,computer}.ts
+  and packages/mock — extracted from the TeachReplay v0.1 feature branch
+  of the OpenMausBot fork (https://github.com/Ottohere-Mourn/TeachReplay),
+  which was authored there as Apache-2.0 contributions.
+- packages/remote/src/cdp.ts — the Chrome DevTools semantic-browser
+  helper, derived from OpenMausBot's server/remote-computer.ts
+  computer-use tooling and extended with textbox values, <select> fills,
+  text and navigation actions.
+- packages/remote/src/browser.ts and packages/core/src/redact.ts are
+  behavior-compatible reimplementations of OpenMausBot's
+  computer-observation and redact helpers, written for this standalone
+  package set.
+
+OpenMausBot is an independent, open-source project inspired by Grok Bot;
+it is not affiliated with, endorsed by, or associated with xAI.

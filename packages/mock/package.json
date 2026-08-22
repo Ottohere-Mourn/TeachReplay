@@ -1,0 +1,26 @@
+{
+  "name": "@teachreplay/mock",
+  "version": "0.2.0",
+  "description": "TeachReplay demo computer \u2014 deterministic in-memory GUI+CLI backend for tests and demos",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@teachreplay/core": "file:../core"
+  },
+  "license": "Apache-2.0"
+}

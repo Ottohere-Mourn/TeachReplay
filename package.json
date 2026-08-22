@@ -1,0 +1,21 @@
+{
+  "name": "teachreplay-core-monorepo",
+  "private": true,
+  "version": "0.2.0",
+  "description": "TeachReplay Core \u2014 standalone Teach-by-Demonstration engine (Record \u2192 Compile \u2192 Replay \u2192 Verify)",
+  "scripts": {
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "test": "vitest run",
+    "demo": "node examples/standalone-demo/main.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^26.2.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.10",
+    "@teachreplay/core": "file:packages/core",
+    "@teachreplay/mock": "file:packages/mock",
+    "@teachreplay/remote": "file:packages/remote",
+    "@teachreplay/adapter-dsh": "file:packages/adapter-dsh"
+  }
+}

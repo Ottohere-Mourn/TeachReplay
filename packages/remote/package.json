@@ -1,0 +1,26 @@
+{
+  "name": "@teachreplay/remote",
+  "version": "0.2.0",
+  "description": "TeachReplay remote computer \u2014 generic SSH Linux computer backend (Xvfb + Chrome DevTools) with GUI and shell channels",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@teachreplay/core": "file:../core"
+  },
+  "license": "Apache-2.0"
+}

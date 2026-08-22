@@ -1,0 +1,8 @@
+# TeachReplay overlay for DeepSeek Harness (patch alongside a shipped
+# composition). The teachreplay plugin registers teach_start / teach_stop /
+# teach_compile / teach_replay / teach_shell tools backed by TeachReplay
+# Core. Configure the computer via the plugin config in dsh's settings, or
+# pass a remote SSH computer through TeachReplayConfig.
+- insert:
+    - id: teachreplay
+      name: '@teachreplay/adapter-dsh'

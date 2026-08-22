@@ -1,0 +1,26 @@
+{
+  "name": "@teachreplay/core",
+  "version": "0.2.0",
+  "description": "TeachReplay Core \u2014 harness-agnostic Teach-by-Demonstration engine (record, compile, replay, verify)",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@teachreplay/mock": "file:../mock"
+  }
+}
