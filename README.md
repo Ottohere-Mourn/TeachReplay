@@ -53,10 +53,6 @@ Teach → Record → Compile → Replay → Verify
 
 ## Architecture
 
-<p align="center">
-  <img src="assets/teachreplay-architecture.svg" alt="TeachReplay architecture" width="720">
-</p>
-
 The core owns all Teach-by-Demonstration logic and depends on **nothing but Node.js** — an
 enforced invariant ([independence test](packages/core/test/independence.test.ts)). Adapters
 contribute only backends, stores, and event sinks:
