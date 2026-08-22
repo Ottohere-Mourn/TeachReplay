@@ -62,8 +62,16 @@ Notes for the workspace copy:
   real-API `dsh-teach-plugin.ts`, `invariant.ts`, and spec)
 
 A ready-made integration checkout with everything wired (plugin, invariant
-companion, and the 3-test spec) is what this repository was verified with;
-the upstream PR carries the same content.
+companion, and the 3-test spec) is what this repository was verified with.
+
+**Upstream contribution status**: a focused PR branch is prepared and pushed
+to the fork `Ottohere-Mourn/deepseek-harness`
+(`integrations/teachreplay-plugin`) with the same content — plugin, vendored
+engine, vendor manifest/notices updates, and the 3-test spec. The upstream
+repository currently has Issues/PRs disabled at the API level, so the PR
+cannot be opened programmatically; the one-click compare page is:
+
+https://github.com/deepseek-ai/deepseek-harness/compare/master...Ottohere-Mourn:integrations/teachreplay-plugin
 
 ## Configuration (`cordis.yml`)
 
