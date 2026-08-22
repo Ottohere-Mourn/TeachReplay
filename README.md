@@ -65,6 +65,28 @@ contribute only backends, stores, and event sinks:
 | **OpenMausBot** ([TeachReplay-OpenMausBot](https://github.com/Ottohere-Mourn/TeachReplay-OpenMausBot)) | ✅ thin adapter — the v0.1 integration rebuilt on the core |
 | **DeepSeek Harness** ([deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness)) | ✅ verified — plugin builds, registers `teach_*` tools, and runs Teach → Compile → Replay through real DSH tool dispatch inside the official workspace |
 
+## TeachReplay for DeepSeek Harness
+
+`@teachreplay/adapter-dsh` adds teach-by-demonstration tools to
+[DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) agents:
+`teach_start` / `teach_stop` / `teach_compile` / `teach_replay` /
+`teach_shell` — the same Record → Compile → Replay → Verify engine, no core
+logic duplicated.
+
+- **Verified against a real DSH workspace** (`dsh-v0.1.1-rc.2`): the plugin
+  builds, registers, and all five tools run through the real DSH tool
+  runtime (`ctx.tools.execute`) — 3/3 integration tests
+- **Installation**: DSH's sub-packages resolve only inside its workspace, so
+  the supported path is the documented source/workspace installation — see
+  the [adapter README](packages/adapter-dsh/README.md) (⚠️ DSH is in
+  developer preview with compatibility-breaking changes; re-verify per
+  release)
+- **Demo**: [`examples/dsh-demo`](examples/dsh-demo) runs
+  `teach_start → demonstrate → teach_stop → teach_compile → change
+  parameters → teach_replay → success` locally
+
+*(Not merged upstream — the adapter ships here in the TeachReplay monorepo.)*
+
 ## Quick start
 
 ```sh
