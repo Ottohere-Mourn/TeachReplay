@@ -12,15 +12,21 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "NOTICE"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run"
   },
-  "license": "Apache-2.0",
-  "devDependencies": {
-    "@teachreplay/mock": "file:../mock"
-  }
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ottohere-Mourn/TeachReplay.git",
+    "directory": "packages/core"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "Apache-2.0"
 }

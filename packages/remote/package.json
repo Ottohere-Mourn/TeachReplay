@@ -12,7 +12,8 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "NOTICE"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -20,7 +21,15 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@teachreplay/core": "file:../core"
+    "@teachreplay/core": "workspace:*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ottohere-Mourn/TeachReplay.git",
+    "directory": "packages/remote"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "license": "Apache-2.0"
 }

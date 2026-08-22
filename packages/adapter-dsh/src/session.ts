@@ -5,6 +5,9 @@
 // Replay → Verify lifecycle the OpenMausBot adapter uses. The DSH plugin
 // (dsh-teach-plugin.ts) is a thin tool-registration shell over this.
 
+import { homedir } from "node:os";
+import { join } from "node:path";
+
 import {
   createTeachRuntime,
   FileSkillStore,
@@ -26,24 +29,48 @@ export interface DshTeachSessionOptions {
   pollMs?: number;
 }
 
+/** `~` is never expanded by the OS for paths passed through code (only the
+ * shell does that), so a bare "~/..." dataDir would otherwise create a
+ * literal directory named "~" under the current working directory. */
+function expandHome(path: string): string {
+  if (path === "~") return homedir();
+  if (path.startsWith("~/")) return join(homedir(), path.slice(2));
+  return path;
+}
+
 export class DshTeachSession {
-  readonly runtime: TeachRuntime;
   readonly trajectoryStore: FileTrajectoryStore;
   readonly skillStore: FileSkillStore;
+  private readonly options: DshTeachSessionOptions;
+  private runtimeInstance: TeachRuntime | null = null;
   private lastTrajectoryId: string | null = null;
   private recording = false;
 
   constructor(options: DshTeachSessionOptions) {
-    this.trajectoryStore = new FileTrajectoryStore(options.dataDir);
-    this.skillStore = new FileSkillStore(options.dataDir);
-    const backend = this.resolveBackend(options);
-    this.runtime = createTeachRuntime({
-      backend,
-      trajectoryStore: this.trajectoryStore,
-      skillStore: this.skillStore,
-      ...(options.pollMs !== undefined ? { pollMs: options.pollMs } : {}),
-      ...(options.model !== undefined ? { model: options.model } : {}),
-    });
+    this.options = options;
+    const dataDir = expandHome(options.dataDir);
+    this.trajectoryStore = new FileTrajectoryStore(dataDir);
+    this.skillStore = new FileSkillStore(dataDir);
+  }
+
+  /** Lazy: a plugin with no backend configured yet (still to be patched in
+   * via cordis.yml, or configured later) must still be able to load and
+   * register its tools. Resolving the backend eagerly in the constructor
+   * would make `apply()` throw before any tool registers — deferring it to
+   * first use means only `teach_start` fails, with a clear error, exactly
+   * when a backend is actually needed. */
+  private get runtime(): TeachRuntime {
+    if (!this.runtimeInstance) {
+      const backend = this.resolveBackend(this.options);
+      this.runtimeInstance = createTeachRuntime({
+        backend,
+        trajectoryStore: this.trajectoryStore,
+        skillStore: this.skillStore,
+        ...(this.options.pollMs !== undefined ? { pollMs: this.options.pollMs } : {}),
+        ...(this.options.model !== undefined ? { model: this.options.model } : {}),
+      });
+    }
+    return this.runtimeInstance;
   }
 
   private resolveBackend(options: DshTeachSessionOptions): TeachBackend {

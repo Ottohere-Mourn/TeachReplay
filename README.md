@@ -63,7 +63,7 @@ contribute only backends, stores, and event sinks:
 | --- | --- |
 | **Standalone** (`createTeachRuntime` + file stores + mock/remote backends) | ✅ included — see the [standalone demo](examples/standalone-demo) |
 | **OpenMausBot** ([TeachReplay-OpenMausBot](https://github.com/Ottohere-Mourn/TeachReplay-OpenMausBot)) | ✅ thin adapter — the v0.1 integration rebuilt on the core |
-| **DeepSeek Harness** ([deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness)) | ✅ verified — plugin builds, registers `teach_*` tools, and runs Teach → Compile → Replay through real DSH tool dispatch inside the official workspace |
+| **DeepSeek Harness** ([deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness)) | ✅ adapter targets the real DSH plugin API — see below |
 
 ## TeachReplay for DeepSeek Harness
 
@@ -73,19 +73,28 @@ contribute only backends, stores, and event sinks:
 `teach_shell` — the same Record → Compile → Replay → Verify engine, no core
 logic duplicated.
 
-- **Verified against a real DSH workspace** (`dsh-v0.1.1-rc.2`): the plugin
-  builds, registers, and all five tools run through the real DSH tool
-  runtime (`ctx.tools.execute`) — 3/3 integration tests
-- **Installation**: DSH's sub-packages resolve only inside its workspace, so
-  the supported path is the documented source/workspace installation — see
-  the [adapter README](packages/adapter-dsh/README.md) (⚠️ DSH is in
-  developer preview with compatibility-breaking changes; re-verify per
-  release)
+- **Targets the real DSH plugin API**: `@deepseek-ai/cordis` /
+  `@deepseek-ai/dsh-tools` are `peerDependencies`, pinned as
+  `devDependencies` (`4.0.1` / `0.1.1-rc.2`, the exact pair DSH resolves at
+  `dsh-v0.1.1-rc.2`) so this repo's own build compiles the plugin against
+  the real `defineTool`/`Plugin.Object` types — no local shims. A prior
+  DSH-native rewrite verified inside a full DSH workspace checkout (see the
+  [adapter README](packages/adapter-dsh/README.md#supported-version)) is
+  what this version is based on
+- **Installation**: `pnpm add @teachreplay/adapter-dsh` — DSH's
+  sub-packages are published to npm under the `next` dist-tag while DSH is
+  in developer preview; see the [adapter README](packages/adapter-dsh/README.md)
+  (⚠️ DSH is in developer preview with compatibility-breaking changes;
+  re-verify per release)
 - **Demo**: [`examples/dsh-demo`](examples/dsh-demo) runs
   `teach_start → demonstrate → teach_stop → teach_compile → change
-  parameters → teach_replay → success` locally
+  parameters → teach_replay → success` locally — against the mock
+  computer through `DshTeachSession` directly, not through DSH's real tool
+  runtime
 
-*(Not merged upstream — the adapter ships here in the TeachReplay monorepo.)*
+*(DSH does not accept external pull requests while in developer preview —
+see its own `CONTRIBUTING.md` — so this ships as an independent package
+rather than an upstream PR.)*
 
 ## Quick start
 

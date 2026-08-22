@@ -23,53 +23,57 @@ with per-step verification, on real GUI+CLI computers.
 
 ## Supported version
 
-Verified against **DeepSeek Harness `dsh-v0.1.1-rc.2`** (commit
-`b150a551b8`) — plugin registration and all five tools exercised through
-the real DSH tool runtime (`ctx.tools.execute`) in an official workspace
-checkout.
+Targets the real `@deepseek-ai/cordis` / `@deepseek-ai/dsh-tools` plugin API
+directly — no type shims. Verified two ways against **DeepSeek Harness
+`dsh-v0.1.1-rc.2`** (commit `b150a551b8`):
+
+- **In this package's own build**: `@deepseek-ai/cordis@4.0.1` /
+  `@deepseek-ai/dsh-tools@0.1.1-rc.2` — the exact pair DSH resolves at that
+  tag — are `devDependencies` here, so `pnpm build`/`pnpm typecheck` in this
+  repo compile `dsh-teach-plugin.ts` against the real `defineTool` and
+  `Plugin.Object` types, not a stand-in. A registration probe against a
+  guard replicating the real `ToolRuntime.register()` (which requires every
+  tool to declare `output: { schema, render }`) confirms all five tools
+  pass.
+- **Inside a full DSH workspace checkout**: plugin registration and all five
+  tools exercised through the real DSH tool runtime (`ctx.tools.execute`) —
+  see the verification fork linked below.
 
 > ⚠️ DSH is in **developer preview with compatibility-breaking changes**.
-> Re-verify this adapter against every DSH release you adopt.
+> Re-verify this adapter — and the pinned `@deepseek-ai/*` versions above —
+> against every DSH release you adopt.
 
-## Installation (source/workspace method)
+## Installation
 
-DSH's sub-packages are `workspace:^` peers that resolve only inside the
-DSH workspace (npm currently publishes only the `dsh` CLI bundle, not the
-current sub-packages), so the supported installation is to add the
-TeachReplay packages to the workspace:
+`@deepseek-ai/cordis` and `@deepseek-ai/dsh-tools` are `peerDependencies`
+(`>=4.0.1` / `>=0.1.1-rc.2`) — this package expects the host DSH install to
+provide them, the same way a React component library expects `react` as a
+peer rather than bundling its own copy. DSH's sub-packages are published to
+npm under the `next` dist-tag while DSH is in developer preview (`latest`
+trails behind; pin the `next` version matching your DSH release).
 
 ```sh
-git clone https://github.com/deepseek-ai/deepseek-harness.git
-cd deepseek-harness
-git checkout dsh-v0.1.1-rc.2
-
-# copy the four packages into the workspace
-mkdir -p packages/teachreplay
-cp -r <teachreplay-checkout>/packages/{core,remote,mock} packages/teachreplay/
-cp -r <teachreplay-checkout>/packages/adapter-dsh packages/teachreplay/adapter
-
-pnpm install
-pnpm exec tsc -b packages/teachreplay/adapter   # build check
-pnpm exec vitest run packages/teachreplay/adapter/tests   # 3/3
+pnpm add @teachreplay/adapter-dsh
 ```
 
-Notes for the workspace copy:
+Building from source inside a full DSH workspace checkout (e.g. to test
+against an unreleased DSH commit) still works — copy `packages/{core,mock,
+remote,adapter-dsh}` into the workspace as `packages/teachreplay/*`, switch
+the four packages' cross-deps to `workspace:*`, and adjust each copied
+package's `tsconfig.json` `extends` path by one level (`packages/<name>` →
+`packages/teachreplay/<name>` moves it one directory deeper, so
+`"../../tsconfig.base.json"` must become `"../../../tsconfig.base.json"` to
+keep resolving to the repo root).
 
-- switch cross-deps to `workspace:*` (`@teachreplay/core`, `@teachreplay/remote`)
-- the adapter imports the real `@deepseek-ai/cordis` / `@deepseek-ai/dsh-tools`
-  APIs — replace the standalone type shims (`src/dsh-types.ts`) with the
-  workspace types (see the integration checkout for the ready-made
-  real-API `dsh-teach-plugin.ts`, `invariant.ts`, and spec)
-
-A ready-made integration checkout with everything wired (plugin, invariant
-companion, and the 3-test spec) is what this repository was verified with.
-
-**Upstream contribution status**: a focused PR branch is prepared and pushed
-to the fork `Ottohere-Mourn/deepseek-harness`
-(`integrations/teachreplay-plugin`) with the same content — plugin, vendored
-engine, vendor manifest/notices updates, and the 3-test spec. The upstream
-repository currently has Issues/PRs disabled at the API level, so the PR
-cannot be opened programmatically; the one-click compare page is:
+**Upstream contribution status**: DeepSeek Harness's own `CONTRIBUTING.md`
+states the project does not accept external pull requests while in
+developer preview, and points contributors toward publishing independent
+plugins instead (tagged with the `dsh-plugin` GitHub topic) rather than
+merging into the harness repository — this is stated project policy, not a
+temporarily-disabled API. A verification fork,
+`Ottohere-Mourn/deepseek-harness` (`integrations/teachreplay-plugin`),
+holds an earlier snapshot of this plugin verified inside a full DSH
+workspace, for reference:
 
 https://github.com/deepseek-ai/deepseek-harness/compare/master...Ottohere-Mourn:integrations/teachreplay-plugin
 
@@ -94,8 +98,13 @@ https://github.com/deepseek-ai/deepseek-harness/compare/master...Ottohere-Mourn:
 
 Run: `dsh web --patch cordis.yml`
 
-Without a backend configured, tools register but `teach_start` fails with
-a clear error — configure `remote` or a custom `TeachBackend` first.
+Without a backend configured, `apply()` still registers all five tools —
+the backend is only resolved on first use, so `teach_start` is the one that
+fails, with a clear error, if `remote` or a custom `backend` isn't set by
+then.
+
+`dataDir` accepts a leading `~` (expanded against the real home directory,
+not a literal `~` folder under the process's working directory).
 
 ## Minimal example (through the session, no DSH needed)
 

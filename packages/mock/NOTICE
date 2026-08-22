@@ -1,0 +1,17 @@
+TeachReplay Mock
+Copyright 2026 TeachReplay contributors
+
+This product includes software derived from OpenMausBot
+(https://github.com/milind-soni/OpenMausBot), Apache License 2.0,
+Copyright 2026 Milind Soni and OpenMausBot contributors:
+
+- This package was extracted from the TeachReplay v0.1 feature branch of
+  the OpenMausBot fork (https://github.com/Ottohere-Mourn/TeachReplay),
+  which was authored there as Apache-2.0 contributions.
+
+OpenMausBot is an independent, open-source project inspired by Grok Bot;
+it is not affiliated with, endorsed by, or associated with xAI.
+
+See the TeachReplay monorepo's top-level NOTICE
+(https://github.com/Ottohere-Mourn/TeachReplay) for the full attribution
+covering all packages.
