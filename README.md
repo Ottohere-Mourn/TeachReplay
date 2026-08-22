@@ -1,116 +1,119 @@
-# TeachReplay Core
+<p align="center">
+  <img src="assets/teachreplay-hero.png" alt="TeachReplay hero" width="100%">
+</p>
 
-**The harness-agnostic Teach-by-Demonstration engine.**
+<h1 align="center">TeachReplay</h1>
+
+<p align="center"><strong>Teach once, replay anywhere.</strong></p>
+
+<p align="center">
+TeachReplay is a <strong>harness-agnostic Teach-by-Demonstration engine</strong>: show a workflow once —
+clicks, typed values, shell commands — and it becomes a reusable, parameterized skill that can
+be replayed later with different inputs and an explicit success/failure verdict on real computers.
+</p>
+
+<div align="center">
+
+[![TeachReplay demo — teach → compile → change parameters → replay → success](assets/teachreplay-demo.gif)](assets/teachreplay-demo.mp4)
+
+*Teach → Compile → change parameters → Replay → Success · 26 s · [watch in HD](assets/teachreplay-demo.mp4)*
+
+</div>
+
+---
+
+## What is TeachReplay?
 
 ```text
-TeachReplay Core
-Record → Compile → Replay → Verify
-        |
-   +----+----+
-   |         |
-OpenMausBot  DSH
- Adapter    Adapter
+Teach → Record → Compile → Replay → Verify
 ```
 
-TeachReplay Core turns a human demonstration of a GUI/CLI workflow into a
-structured, versioned trajectory, compiles it into a reusable
-**parameterized skill** (demonstrated values become inputs with your values
-as defaults), and replays it later with different inputs — ending in an
-**explicit success or failure** every time.
+1. **Teach** — start a recording and demonstrate the task once on a computer.
+2. **Record** — the recorder watches the computer's *semantic* state (URLs, visible text,
+   element roles and values) and diffs it into a versioned trajectory. Password fields stay
+   masked; every value passes secret redaction.
+3. **Compile** — a deterministic compiler turns the trajectory into a **parameterized skill**:
+   your demonstrated values become inputs with your values as defaults. GUI steps are grounded
+   semantically (role + name, never raw coordinates); shell commands become real CLI steps
+   with their recorded exit codes.
+4. **Replay** — the engine re-snapshots per step, matches targets semantically, acts, and
+   verifies each step's effect. One bounded retry, an optional model-assisted recovery hook,
+   then **explicit failure**.
+5. **Verify** — success requires the recorded condition (URL or confirmation text) to hold.
+   "The engine stopped" is never success.
 
-It contains **no OpenMausBot dependency** (enforced by a test), and is the
-engine behind both the OpenMausBot Teach Mode and the DeepSeek Harness
-(DSH) adapter.
-
-## Packages
+## Package overview
 
 | Package | Purpose |
 | --- | --- |
-| [`@teachreplay/core`](packages/core) | trajectory schema, recorder, parameterized skill compiler, parameter substitution, replay engine, verifier, file stores, `createTeachRuntime` orchestration |
-| [`@teachreplay/remote`](packages/remote) | generic SSH Linux computer backend (Xvfb + Chrome DevTools) with GUI + shell channels — not AutoDL/Box-specific |
+| [`@teachreplay/core`](packages/core) | trajectory schema · recorder · parameterized skill compiler · parameter substitution · replay engine · verifier · file stores · `createTeachRuntime` orchestration |
+| [`@teachreplay/remote`](packages/remote) | generic SSH Linux computer backend (Xvfb + Chrome DevTools) with GUI + shell channels — not provider-specific |
 | [`@teachreplay/mock`](packages/mock) | deterministic in-memory demo computer for tests and local demos |
-| [`@teachreplay/adapter-dsh`](packages/adapter-dsh) | DeepSeek Harness plugin registering `teach_*` tools (see its README for integration status) |
+| [`@teachreplay/adapter-dsh`](packages/adapter-dsh) | DeepSeek Harness plugin registering `teach_*` tools |
 
-The OpenMausBot adapter lives in the [TeachReplay v0.1 repository](https://github.com/Ottohere-Mourn/TeachReplay)
-(`server/teach/manager.ts` — a thin wrapper over `createTeachRuntime`).
+## Architecture
 
-## Core interfaces
+<p align="center">
+  <img src="assets/teachreplay-architecture.svg" alt="TeachReplay architecture" width="720">
+</p>
 
-```ts
-// A computer Teach Mode can record against and replay through
-interface ComputerBackend {
-  readonly kind: string;
-  snapshot(): Promise<ComputerSnapshot>;   // semantic: roles/names/values, never pixels-only
-  navigate(url: string): Promise<void>;
-  fill(ref: string, value: string): Promise<void>;
-  click(ref: string): Promise<void>;
-  text(): Promise<string>;
-}
+The core owns all Teach-by-Demonstration logic and depends on **nothing but Node.js** — an
+enforced invariant ([independence test](packages/core/test/independence.test.ts)). Adapters
+contribute only backends, stores, and event sinks:
 
-// The CLI half of GUI+CLI workflows
-interface ShellBackend {
-  exec(command: string, options?: { cwd?: string }): Promise<{ exitCode: number | null; stdout: string; stderr: string }>;
-}
+| Integration | Status |
+| --- | --- |
+| **Standalone** (`createTeachRuntime` + file stores + mock/remote backends) | ✅ included — see the [standalone demo](examples/standalone-demo) |
+| **OpenMausBot** ([TeachReplay-OpenMausBot](https://github.com/Ottohere-Mourn/TeachReplay-OpenMausBot)) | ✅ thin adapter — the v0.1 integration rebuilt on the core |
+| **DeepSeek Harness** ([deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness)) | ✅ verified — plugin builds, registers `teach_*` tools, and runs Teach → Compile → Replay through real DSH tool dispatch inside the official workspace |
 
-type TeachBackend = ComputerBackend & ShellBackend;
-
-// Persistence (file-based implementation included)
-interface TrajectoryStore { saveTrajectory; getTrajectory; listTrajectories }
-interface SkillStore { saveSkill; getSkill; listSkills; removeSkill }
-
-// Optional model hooks — today: recovery proposals when a step's target
-// cannot be found on the live page
-interface ModelBackend { recover?(...): Promise<{ role: string; name?: string } | null> }
-```
-
-`createTeachRuntime({ backend, trajectoryStore, skillStore, model?, emit? })`
-ties them together: `startRecording / stopRecording / cancelRecording /
-recordShell / compileRecording / replay`. Adapters never duplicate core
-logic — they only provide backends, stores, and event sinks.
-
-## Standalone demo
-
-No OpenMausBot, no harness, no network — just core + mock:
+## Quick start
 
 ```sh
+git clone https://github.com/Ottohere-Mourn/TeachReplay.git
+cd TeachReplay
 pnpm install
 pnpm build
-pnpm demo
+pnpm demo        # standalone: record → compile → change parameters → replay → verify
+pnpm test        # 50 tests, including the zero-harness-dependency invariant
+pnpm typecheck
 ```
 
-```
-■ 1 · start recording — the recorder begins watching
-■ 2 · demonstrate — the person fills the report form while recording
-■ 3 · compile — trajectory becomes a parameterized skill
-   inputs: month="August", report-title="August sales", recipient-email="reports@example.com"
-■ 4 · change parameters — replay with new inputs
-   inputs: November / November sales / cfo@example.com
-■ 5 · replay → verify
-   status: SUCCESS — 6/6 steps
-   verification: ok — page shows "…"
-   ground truth on the computer: November / November sales / cfo@example.com
-DEMO PASSED — teach once, replay with new inputs, verified.
-```
+The demo runs entirely on the built-in demo computer — no credentials, no network, no harness.
 
-## Tests and evaluation
+## Real evaluation
 
-```sh
-pnpm typecheck   # all packages
-pnpm test        # 50 tests: schema, recorder, compiler, replay, runtime,
-                 # remote backend (fake ssh), DSH session, independence checks
-```
+`scripts/mini-benchmark.mjs` runs 8 tasks / 14 replays against a real remote Linux computer
+(GUI + CLI, SSH env-configured). Every success is checked against ground truth on the machine,
+not just the replay's own verdict. Latest real run (results in
+[`scripts/teach-benchmark-results.json`](scripts/teach-benchmark-results.json)):
 
-`scripts/mini-benchmark.mjs` runs the 8-task / 14-replay evaluation
-against a real remote Linux computer (SSH env-configured). The v0.1
-results (14/14 verdicts, 12/12 replays, 2/2 failure detections, 0
-ground-truth mismatches) live in the
-[v0.1 repository](https://github.com/Ottohere-Mourn/TeachReplay/blob/main/scripts/teach-benchmark-results.json);
-the ported benchmark is ready to re-run whenever a remote box is up.
+| Metric | Result |
+| --- | --- |
+| Verdicts correct | **14/14** |
+| Normal replay success | **12/12** |
+| Changed-parameter replays | **6/6** |
+| GUI + CLI workflow | success, processed output matches |
+| Severe UI drift / missing element | **detected as explicit failures (2/2)** |
+| Ground-truth mismatches | **0** |
 
-## Licensing and attribution
+An honest small-scale sanity check — not a claim of state of the art.
 
-Apache-2.0 (see [LICENSE](LICENSE)). TeachReplay Core was extracted from
-TeachReplay v0.1, which was developed inside
-[OpenMausBot](https://github.com/milind-soni/OpenMausBot) (Apache-2.0) —
-see [NOTICE](NOTICE) for the derived-work attributions, including the CDP
-helper derived from OpenMausBot's computer-use tooling.
+## Limitations
+
+- Recording observes **state transitions** (polled, ~500 ms), not input events — very fast
+  actions can coalesce. Slow, deliberate demonstration is the intended input.
+- Clicks are inferred from state changes; ambiguous transitions record no click rather than a
+  wrong one.
+- Model-assisted recovery is an optional hook (`ModelBackend`) — adapters wire the agent.
+- Replay speed is SSH-round-trip bound (~4 s/step on the evaluation box).
+- DSH is in developer preview with compatibility-breaking changes — re-verify per release.
+
+## Attribution and license
+
+Apache-2.0 (see [LICENSE](LICENSE)). TeachReplay was extracted from TeachReplay v0.1, developed
+inside [OpenMausBot](https://github.com/milind-soni/OpenMausBot) (Apache-2.0) — see
+[NOTICE](NOTICE) for the derived-work attributions, including the CDP helper derived from
+OpenMausBot's computer-use tooling. Record-to-skill is not a new idea — TeachReplay's value is
+the working, verified combination of demonstration → structured trajectory → parameterized
+skill → executable replay → explicit verification across GUI + CLI.
