@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TeachReplay — Teach once, replay anywhere.</title>
+  <meta name="description" content="TeachReplay is a harness-agnostic Teach-by-Demonstration engine: show a workflow once, replay it later with different inputs and an explicit verdict.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='2' fill='%23c87941'/%3E%3Cpath d='M4 5h8v2H4zm0 4h8v2H4z' fill='%23fff7ec'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="wrap">
+
+    <!-- hero -->
+    <header class="hero">
+      <img class="hero-img" src="assets/teachreplay-hero.png" alt="TeachReplay" width="860">
+      <h1>TeachReplay</h1>
+      <p class="tagline">Teach once, replay anywhere.</p>
+      <p class="lede">
+        A harness-agnostic Teach-by-Demonstration engine. Show a workflow once —
+        clicks, typed values, shell commands — and it becomes a reusable,
+        parameterized skill, replayed later with different inputs and an
+        explicit success or failure.
+      </p>
+      <div class="buttons">
+        <a class="btn btn-primary" href="https://github.com/Ottohere-Mourn/TeachReplay">GitHub</a>
+        <a class="btn" href="https://github.com/Ottohere-Mourn/TeachReplay/releases/tag/v0.2.0">v0.2.0</a>
+      </div>
+    </header>
+
+    <!-- demo -->
+    <section class="card demo">
+      <a href="assets/teachreplay-demo.mp4" title="Watch in HD">
+        <img class="demo-gif" src="assets/teachreplay-demo.gif" alt="TeachReplay demo — teach, compile, change parameters, replay, success">
+      </a>
+      <p class="demo-caption">26-second walkthrough · click for HD · <a href="assets/teachreplay-demo.mp4">teachreplay-demo.mp4</a></p>
+    </section>
+
+    <!-- workflow -->
+    <section>
+      <h2>How it works</h2>
+      <ol class="flow">
+        <li><b>Teach</b><span>start recording, demonstrate the task once</span></li>
+        <li class="arrow">→</li>
+        <li><b>Record</b><span>semantic events become a versioned trajectory</span></li>
+        <li class="arrow">→</li>
+        <li><b>Compile</b><span>a deterministic compiler builds a parameterized skill</span></li>
+        <li class="arrow">→</li>
+        <li><b>Replay</b><span>deterministic execution with per-step checks</span></li>
+        <li class="arrow">→</li>
+        <li><b>Verify</b><span>an explicit verdict — never silent success</span></li>
+      </ol>
+    </section>
+
+    <!-- highlights -->
+    <section>
+      <h2>Highlights</h2>
+      <div class="grid">
+        <div class="tile"><h3>Harness-agnostic</h3><p>Zero OpenMausBot dependencies, enforced by a test. Adapters contribute backends and stores only.</p></div>
+        <div class="tile"><h3>GUI + CLI workflows</h3><p>Shell commands recorded with real exit codes replay beside browser steps.</p></div>
+        <div class="tile"><h3>Parameterized skills</h3><p>Demonstrated values become inputs — your values are the defaults.</p></div>
+        <div class="tile"><h3>Explicit verification</h3><p>Success requires the recorded condition to hold; failures say which step broke.</p></div>
+        <div class="tile"><h3>Real remote computers</h3><p>Validated on live Linux boxes over SSH — GUI and shell in one workflow.</p></div>
+        <div class="tile"><h3>Semantic grounding</h3><p>Roles and names, not pixels — mild UI drift tolerated, severe drift fails loudly.</p></div>
+      </div>
+    </section>
+
+    <!-- integrations -->
+    <section>
+      <h2>Integrations</h2>
+      <div class="rows">
+        <div class="row"><span class="dot ok"></span><b>Standalone</b><span class="row-note">createTeachRuntime + demo computer — no harness needed</span></div>
+        <div class="row"><span class="dot ok"></span><b>OpenMausBot</b><span class="row-note">thin reference adapter — <a href="https://github.com/Ottohere-Mourn/TeachReplay-OpenMausBot">TeachReplay-OpenMausBot</a></span></div>
+        <div class="row"><span class="dot ok"></span><b>DeepSeek Harness</b><span class="row-note">verified plugin — teach_* tools via real DSH dispatch</span></div>
+      </div>
+    </section>
+
+    <!-- evaluation -->
+    <section>
+      <h2>Small validation benchmark</h2>
+      <div class="stats">
+        <div class="stat"><b>14/14</b><span>verdicts correct</span></div>
+        <div class="stat"><b>12/12</b><span>normal replays</span></div>
+        <div class="stat"><b>6/6</b><span>changed parameters</span></div>
+        <div class="stat"><b>2/2</b><span>drift detected</span></div>
+      </div>
+      <p class="note">8 tasks / 14 replays on a real remote Linux computer, ground-truth checked.
+        An honest sanity check — <b>not</b> a state-of-the-art claim.</p>
+    </section>
+
+    <!-- footer -->
+    <footer>
+      <a href="https://github.com/Ottohere-Mourn/TeachReplay">GitHub</a>
+      <span class="sep">·</span>
+      <a href="https://github.com/Ottohere-Mourn/TeachReplay/releases/tag/v0.2.0">Release v0.2.0</a>
+      <span class="sep">·</span>
+      <span>Apache-2.0</span>
+    </footer>
+
+  </main>
+</body>
+</html>

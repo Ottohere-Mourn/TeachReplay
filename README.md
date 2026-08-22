@@ -6,6 +6,8 @@
 
 <p align="center"><strong>Teach once, replay anywhere.</strong></p>
 
+<p align="center">🌐 <a href="https://ottohere-mourn.github.io/TeachReplay/">Project website</a></p>
+
 <p align="center">
 TeachReplay is a <strong>harness-agnostic Teach-by-Demonstration engine</strong>: show a workflow once —
 clicks, typed values, shell commands — and it becomes a reusable, parameterized skill that can
