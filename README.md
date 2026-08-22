@@ -67,7 +67,7 @@ contribute only backends, stores, and event sinks:
 
 ## TeachReplay for DeepSeek Harness
 
-`@teachreplay/adapter-dsh` adds teach-by-demonstration tools to
+[`@teachreplay/adapter-dsh`](packages/adapter-dsh) adds teach-by-demonstration tools to
 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) agents:
 `teach_start` / `teach_stop` / `teach_compile` / `teach_replay` /
 `teach_shell` — the same Record → Compile → Replay → Verify engine, no core
