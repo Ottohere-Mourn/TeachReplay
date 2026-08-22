@@ -236,8 +236,8 @@ export async function replaySkill(
     recovered,
     checks,
     verification,
-    error: status === "failed"
-      ? (checks.find((check) => !check.ok)?.note ?? verification.note)
-      : undefined,
+    ...(status === "failed"
+      ? { error: checks.find((check) => !check.ok)?.note ?? verification.note }
+      : {}),
   };
 }

@@ -48,8 +48,11 @@ const shellQuote = (value: string): string => `'${value.replace(/'/g, "'\\''")}'
 
 export class RemoteComputerBackend implements TeachBackend {
   readonly kind = "remote" as const;
-  private readonly cfg: Required<Omit<RemoteComputerConfig, "sshCommand" | "keyFile" | "sshExtraArgs">> &
-    Pick<RemoteComputerConfig, "sshCommand" | "keyFile" | "sshExtraArgs">;
+  private readonly cfg: Required<Omit<RemoteComputerConfig, "sshCommand" | "keyFile" | "sshExtraArgs">> & {
+    sshCommand?: string;
+    keyFile?: string;
+    sshExtraArgs?: string[];
+  };
 
   constructor(config: RemoteComputerConfig) {
     if (!config.host) throw new Error("remote computer needs a host");
@@ -57,14 +60,14 @@ export class RemoteComputerBackend implements TeachBackend {
       host: config.host,
       port: config.port ?? 22,
       user: config.user ?? "root",
-      keyFile: config.keyFile,
+      ...(config.keyFile !== undefined ? { keyFile: config.keyFile } : {}),
       display: config.display ?? ":99",
       debugPort: config.debugPort ?? 9222,
       helperPath: config.helperPath ?? "/opt/teachreplay/cdp.mjs",
       shotPath: config.shotPath ?? "/tmp/teachreplay-shot.png",
       chromeProfile: config.chromeProfile ?? "/opt/teachreplay/chrome-profile",
-      sshCommand: config.sshCommand,
-      sshExtraArgs: config.sshExtraArgs,
+      ...(config.sshCommand !== undefined ? { sshCommand: config.sshCommand } : {}),
+      ...(config.sshExtraArgs !== undefined ? { sshExtraArgs: config.sshExtraArgs } : {}),
     };
   }
 
@@ -138,8 +141,8 @@ export class RemoteComputerBackend implements TeachBackend {
               ref: String(element.ref ?? ""),
               role: String(element.role ?? ""),
               name: String(element.name ?? ""),
-              disabled: element.disabled ? true : undefined,
-              value: element.value,
+              ...(element.disabled ? { disabled: true as const } : {}),
+              ...(element.value !== undefined ? { value: element.value } : {}),
             })),
           };
         }

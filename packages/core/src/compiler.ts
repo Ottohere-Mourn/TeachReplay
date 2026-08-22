@@ -251,7 +251,7 @@ export function compileTrajectory(trajectory: Trajectory, options: CompileOption
           id: `s${++stepIndex}`,
           kind: "fill",
           description: `Fill ${event.name || event.role} with ${event.value === parameter.default ? paramRef(parameter.id) : event.value}`,
-          match: { role: event.role, name: event.name || undefined },
+          match: { role: event.role, ...(event.name ? { name: event.name } : {}) },
           value: paramRef(parameter.id),
           parameter: parameter.id,
         });
@@ -262,7 +262,7 @@ export function compileTrajectory(trajectory: Trajectory, options: CompileOption
           id: `s${++stepIndex}`,
           kind: "click",
           description: `Click ${event.name || event.role}`,
-          match: { role: event.role, name: event.name || undefined },
+          match: { role: event.role, ...(event.name ? { name: event.name } : {}) },
         });
         if (/submit|send|pay|purchase|delete|remove|approve|confirm/i.test(event.name)) {
           risks.push(`Clicks "${event.name || event.role}" — a submitting action.`);
@@ -290,7 +290,7 @@ export function compileTrajectory(trajectory: Trajectory, options: CompileOption
           kind: "shell",
           description: `Run \`${event.command}\`${event.cwd ? ` in ${event.cwd}` : ""}`,
           command,
-          cwd: event.cwd,
+          ...(event.cwd ? { cwd: event.cwd } : {}),
         });
         break;
       }
@@ -385,7 +385,7 @@ export function skillReferencesAreValid(skill: Skill): string[] {
   const problems: string[] = [];
   const check = (text: string, where: string) => {
     for (const match of text.matchAll(PARAM_REF)) {
-      if (!declared.has(match[1])) problems.push(`${where} references undeclared parameter "${match[1]}"`);
+      if (!declared.has(String(match[1] ?? ""))) problems.push(`${where} references undeclared parameter "${String(match[1])}"`);
     }
   };
   for (const step of skill.steps) {
@@ -393,7 +393,7 @@ export function skillReferencesAreValid(skill: Skill): string[] {
     if (step.value) check(step.value, `step ${step.id}`);
     if (step.command) check(step.command, `step ${step.id}`);
   }
-  check(skill.success.value, "success condition");
+  check(String(skill.success.value ?? ""), "success condition");
   return problems;
 }
 

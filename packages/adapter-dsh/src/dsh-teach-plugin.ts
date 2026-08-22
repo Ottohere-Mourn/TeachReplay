@@ -10,6 +10,7 @@ export const inject = ["tools"];
 
 export interface TeachReplayConfig {
   dataDir?: string;
+  pollMs?: number;
   remote?: {
     host: string;
     port?: number;
@@ -20,7 +21,10 @@ export interface TeachReplayConfig {
 
 export function apply(ctx: DshContext, config: TeachReplayConfig = {}): void {
   const dataDir = config.dataDir ?? "~/.dsh/teachreplay";
-  const options: DshTeachSessionOptions = { dataDir };
+  const options: DshTeachSessionOptions = {
+    dataDir,
+    ...(config.pollMs !== undefined ? { pollMs: config.pollMs } : {}),
+  };
   if (config.remote) {
     options.backend = {
       kind: "remote",

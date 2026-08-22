@@ -78,8 +78,8 @@ export function createTeachRuntime(options: TeachRuntimeOptions): TeachRuntime {
       const next = new Recorder({
         backend,
         app,
-        pollMs: options.pollMs,
-        now: options.now,
+        ...(options.pollMs !== undefined ? { pollMs: options.pollMs } : {}),
+        ...(options.now !== undefined ? { now: options.now } : {}),
         onEvent: (event) => emit?.({ kind: "teach.event", botId, event }),
       });
       const status = await next.start(botId, name);
@@ -132,7 +132,7 @@ export function createTeachRuntime(options: TeachRuntimeOptions): TeachRuntime {
     async compileRecording(trajectoryId, name) {
       const trajectory = await trajectoryStore.getTrajectory(trajectoryId);
       if (!trajectory) throw new Error("no such recording");
-      const skill = compileTrajectory(trajectory, { name, now: options.now });
+      const skill = compileTrajectory(trajectory, { ...(name !== undefined ? { name } : {}), ...(options.now !== undefined ? { now: options.now } : {}) });
       const problems = skillReferencesAreValid(skill);
       if (problems.length) throw new Error(`compiled skill is invalid: ${problems.join("; ")}`);
       await skillStore.saveSkill(skill);
@@ -144,10 +144,10 @@ export function createTeachRuntime(options: TeachRuntimeOptions): TeachRuntime {
       const entry = await skillStore.getSkill(skillId);
       if (!entry) throw Object.assign(new Error("no such skill"), { status: 404 });
       const result = await replaySkill(entry.skill, inputs ?? {}, backend, {
-        now: options.now,
-        recover: model?.recover
-          ? (step, snapshot) => model.recover!(entry.skill, step, snapshot)
-          : undefined,
+        ...(options.now !== undefined ? { now: options.now } : {}),
+        ...(model?.recover
+          ? { recover: (step: { kind: string; match?: { role: string; name?: string }; description: string }, snapshot: ComputerSnapshot) => model.recover!(entry.skill, step, snapshot) }
+          : {}),
       });
       emit?.({ kind: "teach.replay", skillId, botId: entry.skill.botId, result });
       return result;

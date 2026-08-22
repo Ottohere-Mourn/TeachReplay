@@ -53,7 +53,7 @@ export interface RecordingStatus {
 const defaultSleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export class Recorder {
-  private readonly options: Required<Omit<RecorderOptions, "onEvent">> & Pick<RecorderOptions, "onEvent">;
+  private readonly options: Required<Omit<RecorderOptions, "onEvent">> & { onEvent?: RecorderOptions["onEvent"] };
   private baseline: ComputerSnapshot | null = null;
   private trajectory: Trajectory | null = null;
   private timer: ReturnType<typeof setInterval> | null = null;
@@ -157,7 +157,7 @@ export class Recorder {
       kind: "shell",
       at: this.options.now(),
       command,
-      cwd: input.cwd?.trim() || undefined,
+      ...(input.cwd?.trim() ? { cwd: input.cwd.trim() } : {}),
       exitCode: result.exitCode,
       stdout: redactSecretsInText(result.stdout).slice(-4_000),
       stderr: redactSecretsInText(result.stderr).slice(-2_000),
@@ -232,7 +232,7 @@ export class Recorder {
     if (this.pendingVanish) {
       const pending = this.pendingVanish;
       if (!current.has(pending.ref) && !sameNamed(pending.role, pending.name)) {
-        this.emit({ kind: "click", at: this.options.now(), ref: pending.ref, role: pending.role, name: pending.name, checked: pending.checked });
+        this.emit({ kind: "click", at: this.options.now(), ref: pending.ref, role: pending.role, name: pending.name, ...(pending.checked !== undefined ? { checked: pending.checked } : {}) });
       }
       this.pendingVanish = null;
     }
@@ -240,12 +240,12 @@ export class Recorder {
       const after = current.get(ref);
       if (!after) {
         if (CLICKABLE_ROLES.has(before.role.toLowerCase()) && !this.pendingVanish && !sameNamed(before.role, before.name)) {
-          this.pendingVanish = { ref, role: before.role, name: before.name, checked: before.checked };
+          this.pendingVanish = { ref, role: before.role, name: before.name, ...(before.checked !== undefined ? { checked: before.checked } : {}) };
         }
         continue;
       }
       if (before.checked !== undefined && after.checked !== before.checked) {
-        this.emit({ kind: "click", at: this.options.now(), ref, role: after.role, name: after.name, checked: before.checked });
+        this.emit({ kind: "click", at: this.options.now(), ref, role: after.role, name: after.name, ...(before.checked !== undefined ? { checked: before.checked } : {}) });
       }
     }
     for (const [ref, after] of current) {
@@ -265,7 +265,7 @@ export class Recorder {
         role: after.role,
         name: after.name,
         value,
-        redacted: redacted ? true : undefined,
+        ...(redacted ? { redacted: true as const } : {}),
       });
     }
     if (snapshot.text !== baseline.text) {

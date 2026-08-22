@@ -111,7 +111,7 @@ function eventFrom(raw: unknown): TeachEvent {
       };
     case "navigate":
       check(isString(event.url), "navigate event needs a url");
-      return { kind: "navigate", at, url: event.url, title: isString(event.title) ? event.title : undefined };
+      return { kind: "navigate", at, url: event.url, ...(isString(event.title) ? { title: event.title } : {}) };
     case "fill":
       check(isString(event.value), "fill event needs a value");
       return {
@@ -121,8 +121,8 @@ function eventFrom(raw: unknown): TeachEvent {
         role: String(event.role ?? ""),
         name: String(event.name ?? ""),
         value: event.value,
-        sensitive: event.sensitive === true ? true : undefined,
-        redacted: event.redacted === true ? true : undefined,
+        ...(event.sensitive === true ? { sensitive: true as const } : {}),
+        ...(event.redacted === true ? { redacted: true as const } : {}),
       };
     case "click":
       return {
@@ -131,7 +131,7 @@ function eventFrom(raw: unknown): TeachEvent {
         ref: String(event.ref ?? ""),
         role: String(event.role ?? ""),
         name: String(event.name ?? ""),
-        checked: typeof event.checked === "boolean" ? event.checked : undefined,
+        ...(typeof event.checked === "boolean" ? { checked: event.checked } : {}),
       };
     case "observe":
       check(isString(event.text), "observe event needs text");
@@ -145,10 +145,10 @@ function eventFrom(raw: unknown): TeachEvent {
         kind: "shell",
         at,
         command: event.command,
-        cwd: isString(event.cwd) && event.cwd ? event.cwd : undefined,
+        ...(isString(event.cwd) && event.cwd ? { cwd: event.cwd } : {}),
         exitCode: event.exitCode == null ? null : Number(event.exitCode),
-        stdout: isString(event.stdout) ? event.stdout : undefined,
-        stderr: isString(event.stderr) ? event.stderr : undefined,
+        ...(isString(event.stdout) ? { stdout: event.stdout } : {}),
+        ...(isString(event.stderr) ? { stderr: event.stderr } : {}),
       };
     default:
       throw new Error(`unknown trajectory event kind "${event.kind}"`);

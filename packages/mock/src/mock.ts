@@ -157,7 +157,7 @@ export class MockComputer implements TeachBackend {
         role: field.role,
         name: field.label,
         value: field.value,
-        sensitive: field.sensitive ? true : undefined,
+        ...(field.sensitive ? { sensitive: true as const } : {}),
       })),
       ...this.page.buttons.map((button) => ({
         ref: button.ref,

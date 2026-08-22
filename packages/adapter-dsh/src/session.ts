@@ -4,7 +4,6 @@
 // computer backend and file stores, exposes the same Record → Compile →
 // Replay → Verify lifecycle the OpenMausBot adapter uses. The DSH plugin
 // (dsh-teach-plugin.ts) is a thin tool-registration shell over this.
-import { join } from "node:path";
 
 import {
   createTeachRuntime,
@@ -42,8 +41,8 @@ export class DshTeachSession {
       backend,
       trajectoryStore: this.trajectoryStore,
       skillStore: this.skillStore,
-      pollMs: options.pollMs,
-      model: options.model,
+      ...(options.pollMs !== undefined ? { pollMs: options.pollMs } : {}),
+      ...(options.model !== undefined ? { model: options.model } : {}),
     });
   }
 
