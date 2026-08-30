@@ -1,0 +1,34 @@
+{
+  "name": "@teachreplay/vlm-compiler",
+  "version": "0.2.0",
+  "description": "TeachReplay VLM compiler — screenshot capture and vision-model compilation of a demonstration into a Skill",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@teachreplay/core": "workspace:*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ottohere-Mourn/TeachReplay.git",
+    "directory": "packages/vlm-compiler"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "Apache-2.0"
+}

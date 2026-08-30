@@ -20,6 +20,9 @@ importers:
       '@teachreplay/remote':
         specifier: file:packages/remote
         version: link:packages/remote
+      '@teachreplay/vlm-compiler':
+        specifier: file:packages/vlm-compiler
+        version: file:packages/vlm-compiler
       '@types/node':
         specifier: ^26.2.0
         version: 26.2.0
@@ -61,6 +64,12 @@ importers:
         version: link:../core
 
   packages/remote:
+    dependencies:
+      '@teachreplay/core':
+        specifier: workspace:*
+        version: link:../core
+
+  packages/vlm-compiler:
     dependencies:
       '@teachreplay/core':
         specifier: workspace:*
@@ -298,6 +307,9 @@ packages:
 
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
+
+  '@teachreplay/vlm-compiler@file:packages/vlm-compiler':
+    resolution: {directory: packages/vlm-compiler, type: directory}
 
   '@types/chai@5.2.3':
     resolution: {integrity: sha512-Mw558oeA9fFbv65/y4mHtXDs9bPnFMZAL/jxdPFUpOHHIXX91mcgEHbS5Lahr+pwZFR8A7GQleRWeI6cGFC2UA==}
@@ -772,6 +784,10 @@ snapshots:
   '@rolldown/pluginutils@1.0.1': {}
 
   '@standard-schema/spec@1.1.0': {}
+
+  '@teachreplay/vlm-compiler@file:packages/vlm-compiler':
+    dependencies:
+      '@teachreplay/core': link:packages/core
 
   '@types/chai@5.2.3':
     dependencies:

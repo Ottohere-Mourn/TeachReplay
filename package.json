@@ -7,7 +7,8 @@
     "build": "pnpm -r build",
     "typecheck": "pnpm -r typecheck",
     "test": "vitest run",
-    "demo": "node examples/standalone-demo/main.mjs"
+    "demo": "node examples/standalone-demo/main.mjs",
+    "demo:vlm": "node examples/vlm-demo/main.mjs"
   },
   "devDependencies": {
     "@types/node": "^26.2.0",
@@ -16,6 +17,7 @@
     "@teachreplay/core": "file:packages/core",
     "@teachreplay/mock": "file:packages/mock",
     "@teachreplay/remote": "file:packages/remote",
-    "@teachreplay/adapter-dsh": "file:packages/adapter-dsh"
+    "@teachreplay/adapter-dsh": "file:packages/adapter-dsh",
+    "@teachreplay/vlm-compiler": "file:packages/vlm-compiler"
   }
 }
